@@ -3,30 +3,37 @@ package com.services.product.pricerates.application.services;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.services.product.pricerates.domain.constants.PriceRateProductConstants;
 import com.services.product.pricerates.domain.dto.ProductDto;
-import com.services.product.pricerates.domain.port.PriceRateProductPort;
-import com.services.product.pricerates.domain.port.ProductRepositoryPort;
+import com.services.product.pricerates.domain.exceptions.ProductNotFoundException;
+import com.services.product.pricerates.domain.port.in.PriceRateProductInPort;
+import com.services.product.pricerates.domain.port.out.ProductRepositoryOutPort;
 
 @Service
-public class PriceRatesProductService implements PriceRateProductPort {
+public class PriceRatesProductService implements PriceRateProductInPort {
 
     @Autowired
-    private ProductRepositoryPort productRepositoryPort;
+    private ProductRepositoryOutPort productRepositoryPort;
 
     @Override
-    public ProductDto getPriceRateProductByDateAndBrand(Date applicationDate, Long brand, Long productId) throws Exception {
-        
-        List<ProductDto> productsFromBbdd = productRepositoryPort.findByIdAndBrand(productId, brand);
+    public ProductDto getPriceRateProductByDateAndBrand(Date applicationDate, Long brand, Long productId)
+            throws ProductNotFoundException {
+        Optional<List<ProductDto>> productsFromBbdd = productRepositoryPort.findByIdAndBrand(productId, brand);
 
-        List<ProductDto> productsInDate = filterProductsByDateApplicable(productsFromBbdd, applicationDate);
+        if (productsFromBbdd.isEmpty()) {
+            throw new ProductNotFoundException(PriceRateProductConstants.PRODUCT_NOT_FOUND);
+        }
+
+        List<ProductDto> productsInDate = filterProductsByDateApplicable(productsFromBbdd.get(), applicationDate);
 
         if (productsInDate.isEmpty()) {
-            throw new Exception();
+            throw new ProductNotFoundException(PriceRateProductConstants.PRODUCT_NOT_FOUND);
         }
         
         return getProductByPriority(productsInDate);
@@ -41,5 +48,4 @@ public class PriceRatesProductService implements PriceRateProductPort {
     private ProductDto getProductByPriority(List<ProductDto> products) {
         return products.stream().max(Comparator.comparing(ProductDto::getPriority)).get();
     }
-    
 }
