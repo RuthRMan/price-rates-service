@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "d6b52af9-3e87-4c5c-aac7-a17832a3d377",
+		"name": "price-rate-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40869224"
+	},
+	"item": [
+		{
+			"name": "GET /product/pricerate",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/product/pricerate?applicationDate=2020-06-14 10:00:00&brand=1&id=35455",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"product",
+						"pricerate"
+					],
+					"query": [
+						{
+							"key": "applicationDate",
+							"value": "2020-06-14 10:00:00"
+						},
+						{
+							"key": "brand",
+							"value": "1"
+						},
+						{
+							"key": "id",
+							"value": "35455"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
