@@ -159,4 +159,14 @@ public class PriceRatesProductControllerTest {
                 .andReturn();
     }
 
+    @Test
+    public void getNoProductTest2() throws Exception {
+        String fechaAppNoPrd = "2020-06-13 00:00:00";
+        this.mockMvc.perform(get(ENDPOINT_PRODUCT_PRICERATE + "applicationDate=" + fechaAppNoPrd + "&brand=" + BRAND + "&id=9999"))
+                .andExpect(status().isConflict())
+                .andExpect(status().reason(containsString(PRODUCT_NOT_FOUND)))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+    }
+
 }
